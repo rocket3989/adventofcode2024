@@ -24,19 +24,23 @@ def solve1(data: str) -> int:
 
     for target, digits in tqdm(parsed):
         digits = [int(x) for x in digits.split(" ")]
+        target = int(target)
 
         for prod in product(['*', '+'], repeat=len(digits) - 1):
 
-            curr = int(digits[0])
+            curr = digits[0]
 
             for op, digit in zip(prod, digits[1:]):
                 if op == '*':
-                    curr *= int(digit)
+                    curr *= digit
                 else:
-                    curr += int(digit)
+                    curr += digit
 
-            if curr == int(target):
-                ans += int(target)
+                if curr > target:
+                    break
+
+            if curr == target:
+                ans += target
                 break
 
     return ans
@@ -47,21 +51,25 @@ def solve2(data: str) -> int:
 
     for target, digits in tqdm(parsed):
         digits = [int(x) for x in digits.split(" ")]
+        target = int(target)
 
         for prod in product(['*', '+', '||'], repeat=len(digits) - 1):
 
-            curr = int(digits[0])
+            curr = digits[0]
 
             for op, digit in zip(prod, digits[1:]):
                 if op == '||':
                     curr = int(str(curr) + str(digit))
                 elif op == '*':
-                    curr *= int(digit)
+                    curr *= digit
                 else:
-                    curr += int(digit)
+                    curr += digit
 
-            if curr == int(target):
-                ans += int(target)
+                if curr > target:
+                    break
+
+            if curr == target:
+                ans += target
                 break
 
     return ans
