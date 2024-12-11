@@ -32,13 +32,13 @@ def solve1(data: str) -> int:
     @functools.cache
     def dfs(x, y):
         if matrix[x][y] == 9:
-            return frozenset([(x, y)])
+            return set([(x, y)])
         
         ret = set()
         for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
             if matrix[x + dx][y + dy] == matrix[x][y] + 1:
                 ret |= set(dfs(x + dx, y + dy))
-        return frozenset(ret)
+        return ret
 
     ans = 0
 
