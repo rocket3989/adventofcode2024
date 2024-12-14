@@ -1,3 +1,4 @@
+import json
 from aocd import get_data
 from parse import parse, findall, search
 from rich import print as print
@@ -45,7 +46,6 @@ def solve1(data: str) -> int:
 
     robots = []
     for row in parsed:
-
         robots.append(row)
 
     n, m = 101, 103
@@ -56,82 +56,28 @@ def solve1(data: str) -> int:
         final_x = ((robot[0] + 100 * robot[2]) + 10000 * n) % n
         final_y = ((robot[1] + 100 * robot[3]) + 10000 * m) % m
 
-        print(final_x, final_y)
 
         if final_x < n // 2:
             if final_y < m // 2:
                 q1 += 1
             elif final_y > m // 2:
-                q4 += 1
+                q2 += 1
         elif final_x > n // 2:
             if final_y < m // 2:
-                q2 += 1
-            elif final_y > m // 2:
                 q3 += 1
+            elif final_y > m // 2:
+                q4 += 1
     
-
-    ans = 0
-
-    print(q1, q2, q3, q4)
     return q1 * q2 * q3 * q4
 
 
 def solve2(data: str) -> int:
-    # first_line = search("{}\n", data)[0]
-    # ns = [int(x) for x in data.split('\n')]
     parsed = [(tuple(r)) for r in findall("p={:d},{:d} v={:d},{:d}", data)]
 
-    # matrix_data = data.split("\n")
-    # n, m = len(matrix_data), len(matrix_data[0])
-    # matrix = defaultdict(lambda: defaultdict(str))
-    # for i in range(n):
-    #     for j in range(m):
-    #         matrix[i][j] = matrix_data[i][j]
-
-    robots = []
-    for row in parsed:
-
-        robots.append(row)
-
-    n, m = 101, 103
-
-    q1, q2, q3, q4 = 0, 0, 0, 0
-
-    for frame in range(100000):
-
-        curr = defaultdict(int)
-
-        for robot in robots:
-            final_x = ((robot[0] + frame * robot[2]) + 10000 * n) % n
-            final_y = ((robot[1] + frame * robot[3]) + 10000 * m) % m
-
-            curr[(final_x, final_y)] += 1
-
-
-        for i in range(n):
-            for j in range(m):
-                if curr[(i, j)] > 0:
-                    print(curr[(i, j)], end='')
-                else:
-                    print('.', end='')
-
-            print()
-        
-        print(frame)
-
-        input()
-                    
     
-
-    ans = 0
-
-    print(q1, q2, q3, q4)
-    return q1 * q2 * q3 * q4
-
-
-    return ans
+    json.dump(parsed, open('day14robots.json', 'w'))
+    return "saved robot data"
 
 print(solve1(test_data))
 print(solve1(data))
-# print(solve2(test_data)) 
 print(solve2(data)) 

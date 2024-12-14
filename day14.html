@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .grid-container {
+            width: fit-content;
+            display: grid;
+            grid-template-columns: repeat(101, 1fr);
+            grid-template-rows: repeat(103, 1fr);
+            gap: 1px;
+            height: 80vh;
+            padding: 10px;
+        }
+
+        .grid-cell {
+            background: lightgray;
+            padding: 1px;
+            aspect-ratio: 1 / 1;
+
+        }
+        .active {
+            background: black;
+        }
+        .controls {
+            margin-top: 10px;
+        }
+        #frame {
+            font-size: 30px;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="center">
+
+        <div class="grid-container" id="grid-container"></div>
+        <div id="frame">0</div>
+        <div class="controls">
+            <button id="previous-button">Previous</button>
+            <button id="next-button">Next</button>
+            <button id="play-button">Play</button>
+        </div>
+    </div>
+    <script>
+        let robots = [] // add robots here
+
+        let frame = 43
+        const frame_advance = 103
+        let interval = -1
+        const rows = 103;
+        const cols = 101;
+
+        function updateFrame() {
+            document.getElementById('frame').innerText = frame
+            document.querySelectorAll('.active').forEach(e => e.classList.remove('active'))
+
+            robots.forEach((robot) => {
+                let final_x = (((robot[0] + frame * robot[2]) % cols) + cols) % cols
+                let final_y = (((robot[1] + frame * robot[3]) % rows) + rows) % rows
+                if (document.getElementById(`cell-${final_y}-${final_x}`) == null) {
+                    console.log(final_y, final_x)
+                }
+
+                document.getElementById(`cell-${final_y}-${final_x}`).classList.add('active')
+            })
+
+        }
+        
+
+        const container = document.getElementById('grid-container');
+
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                const cell = document.createElement('div');
+                cell.classList.add('grid-cell');
+                cell.id = `cell-${i}-${j}`;
+                container.appendChild(cell);
+            }
+        }
+        document.getElementById('previous-button').addEventListener('click', () => {
+            clearInterval(interval)
+            frame -= frame_advance
+            updateFrame()
+        })
+        document.getElementById('next-button').addEventListener('click', () => {
+            clearInterval(interval)
+            frame += frame_advance
+            updateFrame()
+        })
+        document.getElementById('play-button').addEventListener('click', () => {
+            clearInterval(interval)
+
+            interval = setInterval(() => {
+                frame += frame_advance
+                updateFrame()
+            }, 80)
+        })
+        updateFrame()
+    </script>
+</body>
+</html>
