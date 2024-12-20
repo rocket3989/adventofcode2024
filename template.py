@@ -2,7 +2,7 @@ from aocd import get_data
 from parse import parse, findall, search
 from rich import print as print
 from collections import defaultdict, deque, Counter
-import functools
+from functools import cache
 from heapq import heappop, heappush
 from itertools import permutations, product
 import re
