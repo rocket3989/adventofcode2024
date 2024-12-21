@@ -337,15 +337,15 @@ def solve2(data: str) -> int:
     @lru_cache
     def cost(start, end, robot):
 
-        if robot == 1:
+        if robot == 0:
             return abs(end[0] - start[0]) + abs(end[1] - start[1])
         
 
-        q = deque([(start, command_lookup['A'], 0)])
+        h = [(0, start, command_lookup['A'])]
         seen = set()
 
-        while q:
-            location, cursor, dist = q.popleft()
+        while h:
+            dist, location, cursor = heappop(h)
 
             if (location, cursor) in seen:
                 continue
@@ -360,8 +360,8 @@ def solve2(data: str) -> int:
 
                 if directional[new_location] == '':
                     continue
-
-                q.append((new_location, command_lookup[command], dist + cost(cursor, command_lookup[command], robot - 1) + 1))
+                
+                heappush(h, (dist + cost(cursor, command_lookup[command], robot - 1) + 1, new_location, command_lookup[command]))
 
 
 
@@ -378,10 +378,12 @@ def solve2(data: str) -> int:
             end = numeric_lookup[b]
 
             q = deque([(start, command_lookup['A'], 0)])
+
+            h = [(0, start, command_lookup['A'])]
             seen = set()
 
-            while q:
-                location, cursor, dist = q.popleft()
+            while h:
+                dist, location, cursor = heappop(h)
 
                 if (location, cursor) in seen:
                     continue
@@ -389,7 +391,7 @@ def solve2(data: str) -> int:
                 seen.add((location, cursor))
 
                 if location == end:
-                    code_cost += dist + cost(cursor, command_lookup['A'], robot_count + 1)
+                    code_cost += dist + cost(cursor, command_lookup['A'], robot_count)
 
                 for command, (dx, dy) in commands.items():
                     new_location = (location[0] + dx, location[1] + dy)
@@ -397,7 +399,8 @@ def solve2(data: str) -> int:
                     if numeric[new_location] == '':
                         continue
 
-                    q.append((new_location, command_lookup[command], dist + cost(cursor, command_lookup[command], robot_count + 1) + 1))
+                    heappush(h, (dist + cost(cursor, command_lookup[command], robot_count) + 1, new_location, command_lookup[command]))
+
 
         ans += dist * int(code[1:4])
         print(code, dist)
